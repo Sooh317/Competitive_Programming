@@ -1,4 +1,5 @@
-// gauss_jordan          : unverified
+// reference : https://ei1333.github.io/luzhiled/snippets/math/matrix.html
+// gauss_jordan : unverified
 // matrix exponentiation : verified in https://atcoder.jp/contests/abc129/tasks/abc129_f
 template<class T>
 struct Matrix{
