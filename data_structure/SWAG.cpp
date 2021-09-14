@@ -1,5 +1,5 @@
 // reference : https://github.com/NiMiLib/NoshiMochiLibrary/blob/queue_aggregation/lib/data_structure/sequence/queue_aggregation.hpp
-// verified  : https://atcoder.jp/contests/typical90/submissions/25847908
+// verified  : https://atcoder.jp/contests/typical90/submissions/25848275
 template<class T, T(*op)(T, T)>
 struct SWAG{
 struct Node{
@@ -8,6 +8,15 @@ struct Node{
 };
 private:
     std::stack<Node> L, R;
+    
+    void transfer(){
+        L.emplace(R.top().val, R.top().val);
+        R.pop();
+        while(!R.empty()){
+            L.emplace(R.top().val, op(R.top().val, L.top().sum));
+            R.pop();
+        }
+    }
 public:
     SWAG():L(), R(){}
     int size()const{return L.size() + R.size();}
@@ -24,26 +33,12 @@ public:
     }
     void pop(){
         assert(!empty());
-        if(L.empty()){
-            L.emplace(R.top().val, R.top().val);
-            R.pop();
-            while(!R.empty()){
-                L.emplace(R.top().val, op(R.top().val, L.top().sum));
-                R.pop();
-            }
-        }
+        if(L.empty()) transfer();
         L.pop();
     }
     T top(){
         assert(!empty());
-        if(L.empty()){
-            L.emplace(R.top().val, R.top().val);
-            R.pop();
-            while(!R.empty()){
-                L.emplace(R.top().val, op(R.top().val, L.top().sum));
-                R.pop();
-            }
-        }
+        if(L.empty()) transfer();
         return L.top().val;
     }
 };
