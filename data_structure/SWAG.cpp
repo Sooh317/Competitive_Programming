@@ -1,3 +1,4 @@
+// reference : https://github.com/NiMiLib/NoshiMochiLibrary/blob/queue_aggregation/lib/data_structure/sequence/queue_aggregation.hpp
 // verified in https://atcoder.jp/contests/typical90/submissions/23128654
 template<class T, T(*op)(T, T)>
 struct SWAG{
