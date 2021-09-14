@@ -4,7 +4,7 @@ struct Graph{
         Edge(int to, long long cost) : to(to), cost(cost) {}
     };
     int num;
-    const INF = std::numeric_limits<long long>::max();
+    const long long INF = std::numeric_limits<long long>::max();
     std::vector<std::vector<Edge>> G;
     std::vector<long long> dist;
 
