@@ -1,7 +1,5 @@
 struct RollingHash{
-    int n;
-    vector<unsigned long long> hash, power; // hash[k] -> [0, k) (0-indexed)
-
+    RollingHash(){}
     RollingHash(const string &s) : n((int)s.size()){
         hash.assign(n + 1, 0);
         power.assign(n + 1, 0);
@@ -14,6 +12,8 @@ struct RollingHash{
     }
 
 private : 
+    int n;
+    std::vector<unsigned long long> hash, power; // hash[k] -> [0, k) (0-indexed)
     unsigned int Base = 10007;
     const unsigned long long MOD = (1UL << 61) - 1;
     const unsigned long long POSITIVIZER = MOD * ((1UL << 3) - 1);
@@ -21,6 +21,8 @@ private :
     const unsigned long long MASK31 = (1UL << 31) - 1;
     const unsigned long long MASK61 = MOD;
 
+    // xは64bit整数を仮定
+    // mod 2^61 - 1を返す
     unsigned long long CalcMod(unsigned long long x){
         unsigned long long xu = x >> 61;
         unsigned long long xd = x & MASK61;
@@ -29,7 +31,7 @@ private :
         return res;
     }
 
-    // a * b
+    // a * b をそのまま返す
     unsigned long long Mul(unsigned long long a, unsigned long long b){
         unsigned long long au = a >> 31;
         unsigned long long ad = a & MASK31;
@@ -47,19 +49,18 @@ private :
         unsigned long long middleBit= au * bd;
         return (a & MASK31) * bd + ((middleBit & MASK30) << 31) + (middleBit >> 30);
     }
-
 public : 
     //[l, r)
     unsigned long long get(int l, int r){
         return CalcMod(hash[r] + POSITIVIZER - Mul(hash[l], power[r - l]));
     }
 
-    unsigned long long all(){ return get(0, n);}
+    unsigned long long get_all(){ return get(0, n);}
 
     bool match(int l1, int r1, int l2, int r2){
         return get(l1, r1) == get(l2, r2);
     }
-    // longest common suffix between [l1, r1) and [l2, r2)
+    //[l1, r1), [l2, r2) の最長共通接尾辞
     int LCP(int l1, int r1, int l2, int r2){
         int len = min(r1 - l1, r2 - l2);
         int ok = 0, ng = len + 1;
@@ -69,5 +70,12 @@ public :
             else ng = mid;
         }
         return ok;
+    }
+    
+    RollingHash &operator=(const RollingHash &rhs){
+        this->n = rhs.n;
+        this->power = rhs.power;
+        this->hash = rhs.hash;
+        return (*this);
     }
 };
