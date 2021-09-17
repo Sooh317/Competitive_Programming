@@ -1,3 +1,5 @@
+// reference : https://qiita.com/keymoon/items/11fac5627672a6d6a9f6#rollinghash%E3%81%AB%E7%B5%84%E3%81%BF%E8%BE%BC%E3%82%80%E9%9A%9B%E3%81%AB%E5%B7%A5%E5%A4%AB%E3%81%99%E3%82%8B%E3%81%A8%E8%89%AF%E3%81%84%E3%81%93%E3%81%A8
+// verified : https://atcoder.jp/contests/typical90/submissions/25888462
 struct RollingHash{
     RollingHash(){}
     RollingHash(const string &s) : n((int)s.size()){
