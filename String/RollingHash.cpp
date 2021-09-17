@@ -1,5 +1,6 @@
 // reference : https://qiita.com/keymoon/items/11fac5627672a6d6a9f6#rollinghash%E3%81%AB%E7%B5%84%E3%81%BF%E8%BE%BC%E3%82%80%E9%9A%9B%E3%81%AB%E5%B7%A5%E5%A4%AB%E3%81%99%E3%82%8B%E3%81%A8%E8%89%AF%E3%81%84%E3%81%93%E3%81%A8
 // verified : https://atcoder.jp/contests/typical90/submissions/25888462
+// verified : https://onlinejudge.u-aizu.ac.jp/problems/2444
 struct RollingHash{
     RollingHash(){}
     RollingHash(const string &s) : n((int)s.size()){
@@ -54,6 +55,7 @@ private :
 public : 
     //[l, r)
     unsigned long long get(int l, int r){
+        assert(0 <= l && l <= r && r <= n);
         return CalcMod(hash[r] + POSITIVIZER - Mul(hash[l], power[r - l]));
     }
 
@@ -62,8 +64,9 @@ public :
     bool match(int l1, int r1, int l2, int r2){
         return get(l1, r1) == get(l2, r2);
     }
-    //[l1, r1), [l2, r2) の最長共通接尾辞
+    //[l1, r1), [l2, r2) の最長共通接頭辞
     int LCP(int l1, int r1, int l2, int r2){
+        assert(l1 <= r1 && l2 <= r2);
         int len = min(r1 - l1, r2 - l2);
         int ok = 0, ng = len + 1;
         while(abs(ok - ng) > 1){
@@ -73,7 +76,7 @@ public :
         }
         return ok;
     }
-    
+
     RollingHash &operator=(const RollingHash &rhs){
         this->n = rhs.n;
         this->power = rhs.power;
