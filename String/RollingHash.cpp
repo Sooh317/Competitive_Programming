@@ -3,7 +3,7 @@
 // verified : https://onlinejudge.u-aizu.ac.jp/problems/2444
 struct RollingHash{
     RollingHash(){}
-    RollingHash(const string &s) : n((int)s.size()){
+    RollingHash(const std::string &s) : n((int)s.size()){
         hash.assign(n + 1, 0);
         power.assign(n + 1, 0);
         hash[0] = 0;
