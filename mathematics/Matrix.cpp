@@ -1,4 +1,5 @@
 // reference : https://ei1333.github.io/luzhiled/snippets/math/matrix.html
+// gauss_jordan_F2 : https://atcoder.jp/contests/typical90/submissions/25903321
 // gauss_jordan : unverified
 // matrix exponentiation : verified in https://atcoder.jp/contests/abc129/tasks/abc129_f
 template<class T>
@@ -28,6 +29,29 @@ struct Matrix{
     }
 
     // the result will be in B
+    int gauss_jordan_F2(Matrix &B){
+        int rank = 0;
+        B = Matrix(*this);
+        int n = height(), m = width();
+        for(int col = 0; col < m; col++){
+            int idx = -1;
+            for(int i = rank; i < n; i++){
+                if(B[i][col] != 0){
+                    swap(B[i], B[rank]);
+                    break;
+                }
+            }
+            if(B[rank][col] == 0) continue;
+            for(int r = 0; r < n; r++){
+                if(r == rank || B[r][col] == 0) continue;
+                for(int c = m - 1; c > col; c--) B[r][c] ^= B[rank][c];
+                B[r][col] = 0;
+            }
+            if(++rank == n) break;
+        }
+        return rank;
+    }
+
     std::pair<int, int> gauss_jordan(Matrix &B){
         int rank = 0;
         T ret = 1;
@@ -46,15 +70,14 @@ struct Matrix{
             ret *= B[rank][col];
             for(int j = m - 1; j >= col; j--) B[rank][j] /= B[rank][col];
             for(int r = 0; r < n; r++){
-                if(r == rank) continue;
-                T ce = B[r][col] / B[rank][col];
-                for(int c = col; c < m; c++) B[r][c] -= ce * B[rank][c];
+                if(r == rank || B[r][col] == 0) continue;
+                for(int c = m - 1; c > col; c--) B[r][c] -= B[r][col] * B[rank][c];
+                B[r][col] = 0;
             }
-            rank++;
+            if(++rank == n) break;
         }
         return std::pair<int, T>(rank, ret);
     }
-
 
     T det(){
         assert(height() == width());
