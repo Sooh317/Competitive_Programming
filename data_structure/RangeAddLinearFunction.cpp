@@ -27,7 +27,7 @@ public:
     }
 
     void display(){
-        for(int i = 0; i < n; i++) cerr << get(i) << " ";
-        cout << '\n';
+        for(int i = 0; i < n; i++) std::cerr << get(i) << " ";
+        std::cerr << '\n';
     }
 };
