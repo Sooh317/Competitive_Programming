@@ -1,16 +1,16 @@
 struct PartialPersistentUnionfind{
     int n;
     int now;
-    vector<int> par;
-    vector<int> time;
-    vector<vector<pair<int,int>>> sz;
+    std::vector<int> par;
+    std::vector<int> time;
+    std::vector<std::vector<std::pair<int,int>>> sz;
 
     PartialPersistentUnionfind(int n)
         :n(n),
          now(0),
          par(n,-1),
          time(n,INF),
-         sz(n,vector<pair<int,int>>(1,{0,1})) {}
+         sz(n,std::vector<std::pair<int,int>>(1,{0,1})) {}
 
     int find(int x,int t) {
         if (t < time[x]) return x;
