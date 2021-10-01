@@ -1,7 +1,7 @@
 template<class T> struct BIT{
 private:
     int _n, cnt;
-    vector<T> data;
+    std::vector<T> data;
 public:
     BIT(int n) : _n(n + 1), data(n + 1) {
         cnt = 1;
