@@ -1,16 +1,19 @@
+// verified : https://atcoder.jp/contests/arc068/submissions/26342142
+
+// 0-indexed
 template<class T> struct RangeAddBIT{
 private:
     vector<T> a, b;
     int n;
 public:
-    RangeAddBIT(int _n):n(_n), a(_n + 2), b(_n + 2){}
+    RangeAddBIT(int _n):n(_n + 2), a(_n + 2), b(_n + 2){}
     //[l, r)
     void add(int l, int r, T x = T(1)){
         ++l, ++r;
-        for(int i = l; i <= n; i += i & -i) a[i] -= x * l;
-		for(int i = l; i <= n; i += i & -i) b[i] += x;
-		for(int i = r; i <= n; i += i & -i) a[i] += x * r;
-		for(int i = r; i <= n; i += i & -i) b[i] -= x;
+        for(int i = l; i < n; i += i & -i) a[i] -= x * l;
+		for(int i = r; i < n; i += i & -i) a[i] += x * r;
+		for(int i = l; i < n; i += i & -i) b[i] += x;
+		for(int i = r; i < n; i += i & -i) b[i] -= x;
     }
     // [0, r)
     T sum(int r) {
