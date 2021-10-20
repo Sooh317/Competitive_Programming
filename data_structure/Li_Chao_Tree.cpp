@@ -1,3 +1,5 @@
+// verified : https://atcoder.jp/contests/dp/submissions/26704008
+
 template<typename T>
 struct LiChaoTree{
 private:
@@ -8,10 +10,10 @@ private:
         T operator()(T x) const{return m*x + n;}
     };
     int N;
-    vector<line> fs; // lines
-    vector<T> xs; // coordinates
+    std::vector<line> fs; // lines
+    std::vector<T> xs; // coordinates
 
-    int index(T x) const{return lower_bound(xs.begin(), xs.end(), x) - xs.begin();}
+    int index(T x) const{return std::lower_bound(xs.begin(), xs.end(), x) - xs.begin();}
 
     void update(T m, T n, int l, int r){
         line g(m, n);
@@ -30,7 +32,7 @@ private:
             line &f = fs[i];
             if(f(xl) <= g(xl) && f(xr) <= g(xr)) return;
             if(f(xl) >= g(xl) && f(xr) >= g(xr)){ f = g; return;}
-            if(f(xmid) > g(xmid)) swap(f, g);
+            if(f(xmid) > g(xmid)) std::swap(f, g);
             if(f(xl) > g(xl)) i = i << 1 | 0, r = mid;
             else i = i << 1 | 1, l = mid;
         }
@@ -39,7 +41,7 @@ private:
 public:
     LiChaoTree(const vector<T> &xs_) : xs(xs_){
         // if x is already sorted when given in the input, you don't need this
-        sort(xs.begin(), xs.end());
+        std::sort(xs.begin(), xs.end());
         // if no pair of coordinates intersect, you don't need this
         xs.erase(unique(xs.begin(), xs.end()), xs.end());
         N = xs.size();
@@ -56,7 +58,7 @@ public:
     T query(T x) const {
         int i = index(x);
         T res = INF;
-        for(i += N; i; i >>= 1) res = min(res, fs[i](x));
+        for(i += N; i; i >>= 1) res = std::min(res, fs[i](x));
         return res;
     }
 };
