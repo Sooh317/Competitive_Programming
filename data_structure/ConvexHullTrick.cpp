@@ -1,4 +1,5 @@
 // verified : https://atcoder.jp/contests/dp/submissions/26706424
+// verified : https://atcoder.jp/contests/colopl2018-final-open/submissions/26710756
 // reference : https://github.com/kth-competitive-programming/kactl/blob/main/content/data-structures/LineContainer.h
 
 struct Line{
@@ -10,6 +11,7 @@ struct Line{
 };
 
 struct ConvexHullTrick : std::multiset<Line, std::less<>>{
+private:
     static const long long INF = std::numeric_limits<long long>::max();
     long long div(long long a, long long b){return a/b - ((a^b)<0 && a%b);}
     // static const double INF = 1/.0;
@@ -20,6 +22,7 @@ struct ConvexHullTrick : std::multiset<Line, std::less<>>{
         else x->p = div(y->b - x->b, x->a - y->a);
         return x->p >= y->p;
     }
+public:
     void add(long long n, long long m){ // add nx + m
         auto z = insert({n, m, 0}), y = z++, x = y;
         while(intersect(y, z)) z = erase(z);
