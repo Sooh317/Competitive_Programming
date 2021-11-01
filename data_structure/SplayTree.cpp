@@ -1,4 +1,4 @@
-// verified : https://onlinejudge.u-aizu.ac.jp/solutions/problem/1508/review/6021176/sooh/C++17
+// verified : https://onlinejudge.u-aizu.ac.jp/solutions/problem/1508/review/6021403/sooh/C++17
 
 template<typename T, T(*op)(T, T)>
 struct SplayTree{
@@ -62,11 +62,6 @@ struct SplayTree{
         }
     };
 
-    int N;
-    int cnt = 0;
-    Node* root;
-    std::vector<Node> tree;
-
     SplayTree(int n):cnt(0), N(n + 1){ // insertしていくパターン
         tree.resize(n + 1);
         for(int i = 0; i < n; i++){
@@ -90,6 +85,11 @@ struct SplayTree{
         }
         root = &tree[N - 1];
     }
+private:
+    int N;
+    int cnt = 0;
+    Node* root;
+    std::vector<Node> tree;
 
     Node* get(int x, Node* r){ // 左からx番目のnodeを根にして返す
         Node* cur = r;
@@ -117,7 +117,7 @@ struct SplayTree{
         return lroot;
     }
 
-    pair<Node*, Node*> split(int left_num, Node* r){ // left_num : 左の部分木のサイズ
+    pair<Node*, Node*> split(int left_num, Node* r){
         if(left_num == 0) return {nullptr, r};
         if(left_num == r->size) return {r, nullptr};
         r = get(left_num, r);
@@ -141,7 +141,6 @@ struct SplayTree{
         r->update();
         return {merge(lr, rr), r};
     }
-
     Node* shift(int l, int r, Node* root){ //数列用の操作[l, r]
         auto [lr, rr] = erase(r, root);
         root = lr;
@@ -157,5 +156,20 @@ struct SplayTree{
         T ans = cr->acc;
 
         return {merge(merge(lr, cr), rr), ans};
+    }
+
+public:
+    void shift(int l, int r){root = shift(l, r, root);}
+
+    void update(int pos, T v){
+        root = get(pos, root);
+        root->val = v;
+        root->update();
+    }
+
+    T query(int l, int r){
+        auto tmp = query(l, r, root);
+        root = tmp.first;
+        return tmp.second;
     }
 };
