@@ -5,10 +5,11 @@
 template<class T>
 struct Matrix{
     std::vector<std::vector<T>> A;
-
+    // ll modulo;
     Matrix(){}
     Matrix(int _n):A(_n, std::vector<T>(_n, 0)){}
     Matrix(int _n, int _m):A(_n, std::vector<T>(_m, 0)){}
+    Matrix(int _n, int _m, ll md):A(_n, std::vector<T>(_m, 0)){modulo = md;}
     Matrix(std::vector<std::vector<T>> &_A){ A = _A;}
 
     int height()const{return A.size();}
@@ -20,8 +21,8 @@ struct Matrix{
         for(int i = 0; i < height(); i++){
             for(int j = 0; j < width(); j++){
                 res[i] += (A[i][j] * v[j]);
-                //res[i] += (A[i][j] * v[j]) % mod;
-                //if(res[i] >= mod) res[i] -= mod;
+                //res[i] += (A[i][j] * v[j]) % modulo;
+                //if(res[i] >= modulo) res[i] -= modulo;
             }
         }
         v.swap(res);
@@ -29,36 +30,12 @@ struct Matrix{
     }
 
     // the result will be in B
-    int gauss_jordan_F2(Matrix &B){
-        int rank = 0;
-        B = Matrix(*this);
-        int n = height(), m = width();
-        for(int col = 0; col < m; col++){
-            int idx = -1;
-            for(int i = rank; i < n; i++){
-                if(B[i][col] != 0){
-                    swap(B[i], B[rank]);
-                    break;
-                }
-            }
-            if(B[rank][col] == 0) continue;
-            for(int r = 0; r < n; r++){
-                if(r == rank || B[r][col] == 0) continue;
-                for(int c = m - 1; c > col; c--) B[r][c] ^= B[rank][c];
-                B[r][col] = 0;
-            }
-            if(++rank == n) break;
-        }
-        return rank;
-    }
-
-    std::pair<int, int> gauss_jordan(Matrix &B){
+    std::pair<int, T> gauss_jordan(Matrix &B){
         int rank = 0;
         T ret = 1;
         B = Matrix(*this);
         int n = height(), m = width();
         for(int col = 0; col < m; col++){
-            int idx = -1;
             for(int i = rank; i < n; i++){
                 if(B[i][col] != 0){
                     if(i != rank) ret *= -1;
@@ -77,6 +54,50 @@ struct Matrix{
             if(++rank == n) break;
         }
         return std::pair<int, T>(rank, ret);
+    }
+
+    Matrix inv(){ // 存在しないなら単位行列を返す
+        int n = height(), m = width();
+        assert(n = m);
+        int rank = 0;
+        Matrix B = Matrix(*this), C = identity(n);
+        for(int col = 0; col < m; col++){
+            for(int i = rank; i < n; i++){
+                if(B[i][col] != 0){
+                    std::swap(B[i], B[rank]);
+                    std::swap(C[i], C[rank]);
+                    break;
+                }
+            }
+            if(B[rank][col] == 0) return identity(n);
+            for(int j = 0; j < m; j++) C[rank][j] /= B[rank][col];
+            for(int j = m - 1; j >= col; j--) B[rank][j] /= B[rank][col];
+            for(int r = 0; r < n; r++){
+                if(r == rank || B[r][col] == 0) continue;
+                for(int c = 0; c < m; c++) C[r][c] -= B[r][col]*C[rank][c];
+                for(int c = m - 1; c > col; c--) B[r][c] -= B[r][col]*B[rank][c];
+                B[r][col] = 0;
+            }
+            if(++rank == n) break;
+        }
+        return C;
+    }
+
+    Matrix LU_decomposition(){ // Lの対角部が1、LUの狭義下三角がL
+        assert(height() == width());
+        Matrix LU = Matrix(*this);
+        int n = height();
+        for(int k = 0; k < n; k++){
+            for(int i = k + 1; i < n; i++){
+                LU[i][k] /= LU[k][k];
+            }
+            for(int i = k + 1; i < n; i++){
+                for(int j = k + 1; j < n; j++){
+                    LU[i][j] -= LU[j][k] * LU[k][i];
+                }
+            }
+        }
+        return LU;
     }
 
     T det(){
@@ -112,8 +133,8 @@ struct Matrix{
         for(int i = 0; i < n; i++) for(int j = 0; j < l; j++){
             for(int k = 0; k < m; k++){
                 C[i][j] += ((*this)[i][k] * B[k][j]);
-                //C[i][j] += ((*this)[i][k] * B[k][j]) % mod;
-                //if(C[i][j] >= mod) C[i][j] -= mod;
+                //C[i][j] += ((*this)[i][k] * B[k][j]) % modulo;
+                //if(C[i][j] >= modulo) C[i][j] -= modulo;
             }
         }
         A.swap(C);
@@ -121,28 +142,19 @@ struct Matrix{
     }
     Matrix &operator^=(long long k){
         Matrix B = Matrix::identity(height());
-        while(k > 0){
+        // B.modulo = this->modulo;
+        while(k){
             if(k & 1) B *= *this;
             *this *= *this;
-            k >>= 1LL;
+            k >>= 1;
         }
         A.swap(B.A);
         return (*this);
     }
-    Matrix operator+(const Matrix &B)const{
-        return (Matrix(*this) += B);
-    }
-
-    Matrix operator-(const Matrix &B)const{
-        return (Matrix(*this) -= B);
-    }
-
-    Matrix operator*(const Matrix &B)const{
-        return (Matrix(*this) *= B);
-    }
-    Matrix operator^(const long long k)const{
-        return (Matrix(*this) ^= k);
-    }
+    Matrix operator+(const Matrix &B)const{return (Matrix(*this) += B);}
+    Matrix operator-(const Matrix &B)const{return (Matrix(*this) -= B);}
+    Matrix operator*(const Matrix &B)const{return (Matrix(*this) *= B);}
+    Matrix operator^(const long long k)const{return (Matrix(*this) ^= k);}
     inline std::vector<T> &operator[](int k){ return A.at(k);}
     inline const std::vector<T> &operator[](int k)const{ return A.at(k);}
 
@@ -157,3 +169,4 @@ struct Matrix{
         return (os);
     }
 };
+
