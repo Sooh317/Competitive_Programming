@@ -1,7 +1,8 @@
 // reference : https://ei1333.github.io/luzhiled/snippets/math/matrix.html
 // gauss_jordan_F2 : https://atcoder.jp/contests/typical90/submissions/25903321
 // gauss_jordan : unverified
-// matrix exponentiation : verified in https://atcoder.jp/contests/abc129/tasks/abc129_f
+// matrix exponentiation (mint) : verified in https://atcoder.jp/contests/abc129/tasks/abc129_f
+// matrix exponentiation (mod)  : verified in https://atcoder.jp/contests/arc020/submissions/27320350 
 template<class T>
 struct Matrix{
     std::vector<std::vector<T>> A;
