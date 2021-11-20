@@ -1,7 +1,7 @@
 // reference : https://ei1333.github.io/luzhiled/snippets/math/matrix.html
 // gauss_jordan_F2 : https://atcoder.jp/contests/typical90/submissions/25903321
 // gauss_jordan : unverified
-// matrix exponentiation (mint) : verified in https://atcoder.jp/contests/abc129/tasks/abc129_f
+// matrix exponentiation : verified in https://atcoder.jp/contests/abc129/tasks/abc129_f
 // matrix exponentiation (mod)  : verified in https://atcoder.jp/contests/arc020/submissions/27320350 
 template<class T>
 struct Matrix{
@@ -10,7 +10,7 @@ struct Matrix{
     Matrix(){}
     Matrix(int _n):A(_n, std::vector<T>(_n, 0)){}
     Matrix(int _n, int _m):A(_n, std::vector<T>(_m, 0)){}
-    Matrix(int _n, int _m, ll md):A(_n, std::vector<T>(_m, 0)){modulo = md;}
+    //Matrix(int _n, int _m, ll md):A(_n, std::vector<T>(_m, 0)){modulo = md;}
     Matrix(std::vector<std::vector<T>> &_A){ A = _A;}
 
     int height()const{return A.size();}
@@ -170,4 +170,3 @@ struct Matrix{
         return (os);
     }
 };
-
