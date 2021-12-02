@@ -61,7 +61,7 @@ for(int i = 0; i < h; i++){
 }
 cout << dp[0] << endl;
 
-// タイルに個数制限あり
+// HW <= 200, O(HW2^W)解法, タイルに個数制限あり
 // verified : https://atcoder.jp/contests/abc196/submissions/27623476
 if(h < w) swap(h, w);
 V<V<V<int>>> dp(a + 1, V<V<int>>(b + 1, V<int>(1<<w)));
