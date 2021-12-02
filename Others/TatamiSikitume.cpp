@@ -89,3 +89,30 @@ for(int i = 0; i < h; i++){
     }
 }
 cout << dp[a][0] << endl;
+
+// H <= 6, W <= 1e12, 個数制限なし
+// using Matrix.cpp, AtCoder/modint
+// verified: https://atcoder.jp/contests/abc204/submissions/27625589
+if(h < w) swap(h, w);
+Matrix<mint> A(1<<w, 1<<w);
+auto dfs = [&](auto&& self, int mask, int nmask, int x)->void{
+    if(x == w){ // 埋め終わった
+        A[nmask][mask]++;
+        return;
+    }
+    if(mask >> x & 1){ // 何も埋められない
+        self(self, mask, nmask, x + 1);
+    }
+    else{
+        self(self, mask, nmask, x + 1); // 1by1
+        self(self, mask, nmask | (1<<x), x + 1); // 2by1
+        if(x + 1 < w && ((mask >> (x + 1)) & 1) == 0) self(self, mask, nmask, x + 2); // 1by2
+        
+    }
+};
+for(int mask = 0; mask < 1<<w; mask++) dfs(dfs, mask, 0, 0);
+A ^= h;
+V<mint> dp(1<<w);
+dp[0] = 1;
+A.multiply_vector(dp);
+cout << dp[0].val() << endl;
