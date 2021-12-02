@@ -61,26 +61,26 @@ for(int i = 0; i < h; i++){
 }
 cout << dp[0] << endl;
 
-// HW <= 200(ちょっと厳しいかも), O(ABHW2^W)解法, タイルに個数制限あり
-// verified : https://atcoder.jp/contests/abc196/submissions/27623476
+// HW <= 200(ちょっと厳しいかも), O(AHW2^W)解法, タイルに個数制限あり
+// verified : https://atcoder.jp/contests/abc196/submissions/27623908
 if(h < w) swap(h, w);
-V<V<V<int>>> dp(a + 1, V<V<int>>(b + 1, V<int>(1<<w)));
-V<V<V<int>>> ndp(a + 1, V<V<int>>(b + 1, V<int>(1<<w)));
-dp[0][0][0] = 1;
+V<V<int>> dp(a + 1, V<int>(1<<w));
+dp[0][0] = 1;
 for(int i = 0; i < h; i++){
     for(int j = 0; j < w; j++){
-        for(int aa = 0; aa <= a; aa++) for(int bb = 0; bb <= b; bb++) for(int mask = 0; mask < 1<<w; mask++){
+        V<V<int>> ndp(a + 1, V<int>(1<<w));
+        for(int aa = 0; aa <= a; aa++) for(int mask = 0; mask < 1<<w; mask++){
             if(mask >> j & 1){ // 今見てるマスに置かれている
-                ndp[aa][bb][mask ^ (1<<j)] += dp[aa][bb][mask];
+                ndp[aa][mask ^ (1<<j)] += dp[aa][mask];
             }
             else{ // 置かれていない
-                if(bb < b) ndp[aa][bb + 1][mask] += dp[aa][bb][mask];
+                ndp[aa][mask] += dp[aa][mask];
                 if(aa < a){
                     if(j < w - 1 && ((mask >> (j + 1)) & 1) == 0){ // 1by2
-                        ndp[aa + 1][bb][mask | (1<<(j+1))] += dp[aa][bb][mask];
+                        ndp[aa + 1][mask | (1<<(j+1))] += dp[aa][mask];
                     }
                     if(i < h - 1){ // 2by1
-                        ndp[aa + 1][bb][mask | (1<<j)] += dp[aa][bb][mask];
+                        ndp[aa + 1][mask | (1<<j)] += dp[aa][mask];
                     }
                 }
             }
@@ -88,4 +88,4 @@ for(int i = 0; i < h; i++){
         swap(dp, ndp);
     }
 }
-cout << dp[a][b][0] << endl;
+cout << dp[a][0] << endl;
