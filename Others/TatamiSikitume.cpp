@@ -1,6 +1,6 @@
 // HW <= 16, 全探索解法
 // verified : https://atcoder.jp/contests/abc196/submissions/27622900
-V<V<bool>> used(h, V<bool>(w));
+vector<vector<bool>> used(h, vector<bool>(w));
 int ans = 0;
 auto dfs = [&](auto&& self, int x, int y, int ra, int rb)->void{
     if(x == h){ // 全部埋めた
@@ -37,7 +37,7 @@ dfs(dfs, 0, 0, a, b);
 cout << ans << endl;
 
 // HW <= 200, O(HW2^W)解法, タイルに個数制限なし
-V<int> dp(1<<w);
+vector<int> dp(1<<w);
 dp[0] = 1;
 for(int i = 0; i < h; i++){
     for(int j = 0; j < w; j++){
@@ -64,11 +64,11 @@ cout << dp[0] << endl;
 // HW <= 200, O(AHW2^W)解法, タイルに個数制限あり
 // verified : https://atcoder.jp/contests/abc196/submissions/27623908
 if(h < w) swap(h, w);
-V<V<int>> dp(a + 1, V<int>(1<<w));
+vector<vector<int>> dp(a + 1, vector<int>(1<<w));
 dp[0][0] = 1;
 for(int i = 0; i < h; i++){
     for(int j = 0; j < w; j++){
-        V<V<int>> ndp(a + 1, V<int>(1<<w));
+        vector<vector<int>> ndp(a + 1, vector<int>(1<<w));
         for(int aa = 0; aa <= a; aa++) for(int mask = 0; mask < 1<<w; mask++){
             if(mask >> j & 1){ // 今見てるマスに置かれている
                 ndp[aa][mask ^ (1<<j)] += dp[aa][mask];
@@ -112,7 +112,7 @@ auto dfs = [&](auto&& self, int mask, int nmask, int x)->void{
 };
 for(int mask = 0; mask < 1<<w; mask++) dfs(dfs, mask, 0, 0);
 A ^= h;
-V<mint> dp(1<<w);
+vector<mint> dp(1<<w);
 dp[0] = 1;
 A.multiply_vector(dp);
 cout << dp[0].val() << endl;
