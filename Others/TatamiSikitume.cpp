@@ -1,4 +1,5 @@
 // HW <= 16, 全探索解法
+// verified : https://atcoder.jp/contests/abc196/submissions/27622900
 V<V<bool>> used(h, V<bool>(w));
 int ans = 0;
 auto dfs = [&](auto&& self, int x, int y, int ra, int rb)->void{
@@ -59,3 +60,30 @@ for(int i = 0; i < h; i++){
 cout << dp[0] << endl;
 
 // タイルに個数制限あり
+// verified : https://atcoder.jp/contests/abc196/submissions/27623476
+if(h < w) swap(h, w);
+V<V<V<int>>> dp(a + 1, V<V<int>>(b + 1, V<int>(1<<w)));
+V<V<V<int>>> ndp(a + 1, V<V<int>>(b + 1, V<int>(1<<w)));
+dp[0][0][0] = 1;
+for(int i = 0; i < h; i++){
+    for(int j = 0; j < w; j++){
+        for(int aa = 0; aa <= a; aa++) for(int bb = 0; bb <= b; bb++) for(int mask = 0; mask < 1<<w; mask++){
+            if(mask >> j & 1){ // 今見てるマスに置かれている
+                ndp[aa][bb][mask ^ (1<<j)] += dp[aa][bb][mask];
+            }
+            else{ // 置かれていない
+                if(bb < b) ndp[aa][bb + 1][mask] += dp[aa][bb][mask];
+                if(aa < a){
+                    if(j < w - 1 && ((mask >> (j + 1)) & 1) == 0){ // 1by2
+                        ndp[aa + 1][bb][mask | (1<<(j+1))] += dp[aa][bb][mask];
+                    }
+                    if(i < h - 1){ // 2by1
+                        ndp[aa + 1][bb][mask | (1<<j)] += dp[aa][bb][mask];
+                    }
+                }
+            }
+        }
+        swap(dp, ndp);
+    }
+}
+cout << dp[a][b][0] << endl;
