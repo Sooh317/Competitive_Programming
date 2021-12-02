@@ -33,6 +33,8 @@ auto dfs = [&](auto&& self, int x, int y, int ra, int rb)->void{
         } 
     }
 };
+dfs(dfs, 0, 0, a, b);
+cout << ans << endl;
 
 // HW <= 200, O(HW2^W)解法, タイルに個数制限なし
 V<int> dp(1<<w);
