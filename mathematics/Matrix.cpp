@@ -84,11 +84,44 @@ struct Matrix{
         return C;
     }
 
-    Matrix LU_decomposition(){ // Lの対角部が1、LUの狭義下三角がL
+    std::vector<T> solve_linear_system(const std::vector<T>& b1){
+        int n = b1.size();
+        auto [LU, order] = LU_decomposition();
+        std::vector<T> b(n);
+        for(int i = 0; i < n; i++) b[i] = b1[order[i]];
+        std::vector<T> y(n), x(n);
+        for(int i = 0; i < n; i++){
+            y[i] = b[i];
+            for(int j = 0; j < i; j++){
+                y[i] -= LU[i][j] * y[j];
+            }
+        }
+        for(int i = n - 1; i >= 0; i--){
+            x[i] = y[i];
+            for(int j = n - 1; j > i; j--){
+                x[i] -= LU[i][j] * x[j];
+            }
+            x[i] /= LU[i][i];
+        }
+        return x;
+    }
+
+    // [LU, 置換]を返す
+    std::pair<Matrix, std::vector<int>> LU_decomposition(){ // Lの対角部が1、LUの狭義下三角がL
         assert(height() == width());
         Matrix LU = Matrix(*this);
+
         int n = height();
+        std::vector<int> order(n);
+        std::iota(order.begin(), order.end(), 0);
+
         for(int k = 0; k < n; k++){
+            for(int i = k + 1; i < n; i++){
+                if(std::abs(LU[i][k]) > std::abs(LU[k][k])){
+                    std::swap(LU[i], LU[k]);
+                    std::swap(order[i], order[k]);
+                }
+            }
             for(int i = k + 1; i < n; i++){
                 LU[i][k] /= LU[k][k];
             }
@@ -98,7 +131,7 @@ struct Matrix{
                 }
             }
         }
-        return LU;
+        return std::make_pair(LU, order);
     }
 
     T det(){
