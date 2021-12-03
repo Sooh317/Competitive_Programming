@@ -94,7 +94,7 @@ struct Matrix{
             }
             for(int i = k + 1; i < n; i++){
                 for(int j = k + 1; j < n; j++){
-                    LU[i][j] -= LU[j][k] * LU[k][i];
+                    LU[j][i] -= LU[j][k] * LU[k][i];
                 }
             }
         }
