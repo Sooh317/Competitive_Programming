@@ -1,3 +1,5 @@
+// verified: https://atcoder.jp/contests/arc042/submissions/27705925
+
 struct BabyStepGiantStep{
 private:
     long long g, p;
@@ -18,10 +20,9 @@ private:
         long long cur = 1;
         for(int i = 0; i < m; i++){
             table[cur] = i;
-            cur = cur * g % p;
-            if(cur == 1) break;
+            (cur *= g) %= p;
         }
-        ginvm = modpow(modpow(g, p - 2, p), m, p);
+        ginvm = modpow(cur, p - 2, p);
         return;
     }
 
