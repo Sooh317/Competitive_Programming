@@ -1,47 +1,40 @@
-struct PartialPersistentUnionfind{
-    int n;
-    int now;
-    std::vector<int> par;
-    std::vector<int> time;
-    std::vector<std::vector<std::pair<int,int>>> sz;
+// verified : https://atcoder.jp/contests/code-thanks-festival-2017/submissions/27736689
 
-    PartialPersistentUnionfind(int n)
-        :n(n),
-         now(0),
-         par(n,-1),
-         time(n,INF),
-         sz(n,std::vector<std::pair<int,int>>(1,{0,1})) {}
-
-    int find(int x,int t) {
-        if (t < time[x]) return x;
-        return find(par[x],t);
+struct Partially_Persistent_Union_Find{
+private:
+    // tree : {size of this tree (if this is root) / parent (otherwize), time when this node became a child}
+    std::vector<std::pair<int, int>> tree;
+    // siz : for recording the size of a tree at the time T
+    std::vector<std::vector<std::pair<int, int>>> siz;
+    int count;
+public:
+    Partially_Persistent_Union_Find(int n):
+        tree(n, {1, std::numeric_limits<int>::max()}), 
+        siz(n, std::vector<std::pair<int, int>>(1, {0, 1})), 
+        count(0){}
+    
+    int leader(const int t, int x){
+        while(tree[x].second <= t) x = tree[x].first;
+        return x;
     }
 
-    int unite(int x,int y) {
-        ++now;
-        x = find(x,now);
-        y = find(y,now);
-        if (x == y) return now;
-        if (par[x] > par[y]) swap(x,y);
-        par[x] += par[y];
-        par[y] = x;
-        time[y] = now;
-        sz[x].emplace_back(now,-par[x]);
-        return now;
+    int merge(int x, int y){
+        ++count;
+        x = leader(count, x);
+        y = leader(count, y);
+        if(x == y) return x;
+        if(tree[x].first < tree[y].first) std::swap(x, y);
+        tree[x].first += tree[y].first;
+        siz[x].emplace_back(count, tree[x].first);
+        tree[y] = std::pair<int, int>(x, count);
+        return x;
     }
 
-    int size(int x,int t) {
-        int p = find(x,t);
-        int left = 0,right = (int)sz[p].size();
-        while (right - left > 1) {
-            int mid = (left + right) / 2;
-            if (sz[p][mid].first <= t) left = mid;
-            else right = mid;
-        }
-        return sz[p][left].second;
-    }
+    bool same(const int t, int x, int y){return leader(t, x) == leader(t, y);}
 
-    bool same(int x,int y,int t) {
-        return find(x,t) == find(y,t);
+    int size(const int t, int x){
+        x = leader(t, x);
+        auto it = std::lower_bound(siz[x].begin(), siz[x].end(), std::pair<int, int>(t + 1, 0));
+        return (--it)->second;
     }
 };
