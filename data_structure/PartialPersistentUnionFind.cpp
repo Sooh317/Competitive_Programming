@@ -1,4 +1,5 @@
 // verified : https://atcoder.jp/contests/code-thanks-festival-2017/submissions/27736689
+// verified : https://yukicoder.me/submissions/722421
 
 struct Partially_Persistent_Union_Find{
 private:
@@ -18,16 +19,17 @@ public:
         return x;
     }
 
+    // you can get time/leader by changing the return value
     int merge(int x, int y){
         ++count;
         x = leader(count, x);
         y = leader(count, y);
-        if(x == y) return x;
+        if(x == y) return count;
         if(tree[x].first < tree[y].first) std::swap(x, y);
         tree[x].first += tree[y].first;
         siz[x].emplace_back(count, tree[x].first);
         tree[y] = std::pair<int, int>(x, count);
-        return x;
+        return count;
     }
 
     bool same(const int t, int x, int y){return leader(t, x) == leader(t, y);}
