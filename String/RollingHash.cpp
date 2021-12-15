@@ -5,8 +5,6 @@ struct RollingHash{
     using u64 = unsigned long long;
     std::vector<u64> hash; // hash[k] = s[0]*b^(k-1) + s[1]*b^(k-2) + ... + s[k-1]
     RollingHash(const std::string &s, unsigned int base = 10007) : n((int)s.size()), Base(base){
-        RandomNumberGenerator rng;
-        Base = rng(100000,50000000);
         hash.assign(n + 1, 0);
         power.assign(n + 1, 0);
         hash[0] = 0;
