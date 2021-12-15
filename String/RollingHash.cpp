@@ -1,18 +1,10 @@
 // reference : https://qiita.com/keymoon/items/11fac5627672a6d6a9f6#rollinghash%E3%81%AB%E7%B5%84%E3%81%BF%E8%BE%BC%E3%82%80%E9%9A%9B%E3%81%AB%E5%B7%A5%E5%A4%AB%E3%81%99%E3%82%8B%E3%81%A8%E8%89%AF%E3%81%84%E3%81%93%E3%81%A8
 // verified : https://atcoder.jp/contests/arc130/submissions/27918813
+// for randomized modulo, use random.cpp
 struct RollingHash{
-struct RandomNumberGenerator{
-    std::mt19937_64 mt;
-    RandomNumberGenerator() : mt(std::chrono::steady_clock::now().time_since_epoch().count()) {}
-    long long operator()(long long a, long long b) { // [a, b)
-        std::uniform_int_distribution< long long > dist(a, b - 1);
-        return dist(mt);
-    }
-    long long operator()(long long b){return (*this)(0, b);} // [0, b)
-};
     using u64 = unsigned long long;
     std::vector<u64> hash; // hash[k] = s[0]*b^(k-1) + s[1]*b^(k-2) + ... + s[k-1]
-    RollingHash(const std::string &s) : n((int)s.size()){
+    RollingHash(const std::string &s, unsigned int base = 10007) : n((int)s.size()), Base(base){
         RandomNumberGenerator rng;
         Base = rng(100000,50000000);
         hash.assign(n + 1, 0);
