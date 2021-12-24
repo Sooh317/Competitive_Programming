@@ -1,7 +1,7 @@
 // verified: https://onlinejudge.u-aizu.ac.jp/status/users/sooh/submissions/1/DSL_2_A/judge/6151320/C++17
 
 template<typename T, T (*op)(T, T), T (*e)()>
-struct Sqrt_Decomposition{
+struct RMQ{
     int n;
     int bsize;
     std::vector<T> A;
