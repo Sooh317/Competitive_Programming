@@ -50,6 +50,6 @@ public:
         return dw[x];
     }
 
-    std::pair<T, bool> diff(int x, int y){return make_pair(weight(x) - weight(y), same(x, y));}
+    std::pair<T, bool> diff(int x, int y){return make_pair(g(weight(x), weight(y)), same(x, y));}
 
 };
