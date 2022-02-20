@@ -1,4 +1,16 @@
 // verified : https://atcoder.jp/contests/practice2/submissions/29496999
+/*
+If the length of the array after transformation exceeds the maximum possible one, 
+you can apply Karatuba Algorithm.
+F = f1 * x^k + f0
+G = g1 * x^k + g0
+then 
+F o G = h2 * x^(2k) + h1 * x^k + h0
+where
+h2 = f1 o g1
+h0 = f0 o g0
+h1 = f1 o g0 + f0 o g1
+*/
 
 #include <atcoder/modint>
 
